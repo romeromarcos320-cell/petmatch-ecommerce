@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PetMatch - Registro</title>
+    <style>
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            background-color: #FAF4E8; 
+            color: #4A3B32; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+            margin: 0; 
+            padding: 20px 0; 
+        }
+        .box { 
+            background: white; 
+            padding: 40px; 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(74, 59, 50, 0.1); 
+            border: 1px solid #F2E8D9; 
+            max-width: 450px; 
+            width: 100%; 
+            box-sizing: border-box; 
+        }
+        h2 { color: #D35400; margin-top: 0; margin-bottom: 20px; text-align: center; }
+        label { font-weight: bold; font-size: 0.9em; color: #7E6B5A; }
+        input { 
+            width: 100%; 
+            padding: 10px; 
+            margin-top: 5px; 
+            margin-bottom: 15px; 
+            border: 1px solid #F2E8D9; 
+            border-radius: 4px; 
+            box-sizing: border-box; 
+            background-color: #FFFDF9; 
+            color: #4A3B32; 
+        }
+        input:focus { outline: 2px solid #E67E22; }
+        button { 
+            width: 100%; 
+            background: #E67E22; 
+            color: white; 
+            border: none; 
+            padding: 12px; 
+            border-radius: 20px; 
+            font-weight: bold; 
+            font-size: 1em; 
+            cursor: pointer; 
+            margin-top: 10px; 
+            transition: background 0.3s ease; 
+        }
+        button:hover { background: #BA4A00; }
+        .footer-links { text-align: center; margin-top: 20px; font-size: 0.9em; }
+        a { color: #D35400; font-weight: bold; text-decoration: none; }
+        a:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="box">
+        <h2>Registro de Nuevo Cliente</h2>
+        <form method="POST">
+            <label>Nombre</label>
+            <input type="text" name="nombre" required>
+            
+            <label>Apellido</label>
+            <input type="text" name="apellido" required>
+            
+            <label>Email</label>
+            <input type="email" name="email" required>
+            
+            <label>Teléfono</label>
+            <input type="text" name="telefono" required>
+            
+            <label>Dirección</label>
+            <input type="text" name="direccion" required>
+            
+            <label>Nombre de Usuario</label>
+            <input type="text" name="usuario" required>
+            
+            <label>Contraseña</label>
+            <input type="password" name="clave" required>
+            
+            <button type="submit">Crear Cuenta</button>
+        </form>
+        <div class="footer-links">
+            <p>¿Ya tenés cuenta? <a href="/login">Iniciá sesión acá</a></p>
+            <p><a href="/" style="font-weight: normal; color: #7E6B5A;">Volver al catálogo</a></p>
+        </div>
+    </div>
+</body>
+</html>

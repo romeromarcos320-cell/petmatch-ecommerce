@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>PetMatch - Tu Carrito</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background-color: #FAF4E8; color: #4A3B32; margin: 0; padding: 20px; }
+        .container { max-width: 650px; margin: 40px auto; background: white; padding: 30px; border-radius: 8px; border: 1px solid #F2E8D9; box-shadow: 0 4px 6px rgba(74, 59, 50, 0.1); }
+        h2 { color: #D35400; border-bottom: 2px solid #F2E8D9; padding-bottom: 10px; }
+        
+        .item-row { display: flex; justify-content: space-between; border-bottom: 1px solid #FAF4E8; padding: 12px 0; align-items: center; }
+        .total-box { text-align: right; font-weight: bold; font-size: 1.3em; margin: 25px 0; color: #B9770E; }
+        
+        select { width: 100%; padding: 10px; border: 1px solid #F2E8D9; border-radius: 4px; margin-bottom: 20px; }
+        .btn-confirmar { width: 100%; background: #D35400; color: white; padding: 14px; border: none; border-radius: 20px; font-weight: bold; cursor: pointer; }
+        .btn-confirmar:hover { background: #BA4A00; }
+        .volver { display: block; text-align: center; margin-top: 20px; color: #E67E22; text-decoration: none; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>ESTOY LEYENDO ESTE ARCHIVO</h1>
+    <h2>🛒 Tu Carrito de Compras</h2>
+    
+    {% if items %}
+        {% for item in items %}
+            <div class="item-row">
+                <span><strong>{{ item.nombre }}</strong> × {{ item.cantidad }}</span>
+                <span>${{ item.subtotal }}</span>
+            </div>
+        {% endfor %}
+        
+        <div class="total-box">Total: ${{ pedido.total }}</div>
+        
+        <div class="carrito-action" style="margin-top: 15px; display: flex; justify-content: center; gap: 10px;">
+            <form action="/agregar_al_carrito/{{ producto.id_producto }}" method="POST" style="display: flex; gap: 8px; align-items: center;">
+                
+                <input type="hidden" name="cantidad" value="1" min="1" 
+                    style="width: 50px; padding: 5px; border: 1px solid #ddd; border-radius: 4px; text-align: center;">
+                
+                <button type="submit" 
+                        style="padding: 6px 15px; background-color: #D35400; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.3s;">
+                    Añadir al carrito
+                </button>
+            </form>
+        </div>
+
+        <form action="/confirmar_pedido" method="POST">
+            <select name="metodo_pago" required>
+                <option value="" disabled selected>Selecciona tu método de pago</option>
+                <option value="tarjeta">Tarjeta de Crédito/Débito</option>
+                <option value="paypal">PayPal</option>
+                <option value="transferencia">Transferencia Bancaria</option>
+            </select>
+            <button type="submit" class="btn-confirmar">Confirmar Pedido</button>
+        </form>
+    {% else %}
+        <p style="text-align: center; color: #7E6B5A;">Tu carrito está vacío.</p>
+    {% endif %}
+    
+    <a href="/" class="volver">🐾 Seguir explorando el catálogo</a>
+</div>
+
+</body>
+</html>
