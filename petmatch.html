@@ -1,0 +1,1292 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PetMatch &middot; Diseño de App de E-Commerce</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #EFF3F1;
+  --surface: #FFFFFF;
+  --ink: #16241F;
+  --muted: #5B6B66;
+  --accent: #2F6F62;
+  --accent-warm: #C8762A;
+  --rule: #D8E2DD;
+  --mono: "JetBrains Mono", "Fira Code", Consolas, monospace;
+  --display: "Space Grotesk", sans-serif;
+  --body: "Inter", sans-serif;
+}
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--body);
+  line-height: 1.6;
+  font-size: 16px;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.layout { display: flex; min-height: 100vh; }
+
+nav.toc {
+  width: 250px;
+  flex-shrink: 0;
+  background: var(--surface);
+  border-right: 1px solid var(--rule);
+  padding: 32px 20px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+nav.toc .brand {
+  font-family: var(--display);
+  font-weight: 600;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  margin-bottom: 4px;
+}
+nav.toc .brand .paw { color: var(--accent-warm); }
+nav.toc .tagline {
+  font-size: 0.78rem;
+  color: var(--muted);
+  margin-bottom: 28px;
+}
+nav.toc ul { list-style: none; padding: 0; margin: 0; }
+nav.toc li { margin-bottom: 2px; }
+nav.toc a {
+  display: block;
+  color: var(--ink);
+  font-size: 0.88rem;
+  padding: 7px 10px;
+  border-radius: 6px;
+  border-left: 2px solid transparent;
+}
+nav.toc a:hover { background: var(--bg); text-decoration: none; border-left-color: var(--accent-warm); }
+nav.toc .sub { font-size: 0.8rem; color: var(--muted); padding-left: 22px; }
+
+main { flex: 1; padding: 56px 64px 120px; max-width: 880px; }
+
+header.hero { margin-bottom: 56px; }
+header.hero .eyebrow {
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 10px;
+}
+header.hero h1 {
+  font-family: var(--display);
+  font-size: 2.6rem;
+  line-height: 1.05;
+  margin: 0 0 14px;
+  letter-spacing: -0.01em;
+}
+header.hero p.lede {
+  font-size: 1.05rem;
+  color: var(--muted);
+  max-width: 620px;
+}
+
+section { margin-bottom: 64px; scroll-margin-top: 24px; }
+section h2 {
+  font-family: var(--display);
+  font-size: 1.7rem;
+  margin: 0 0 8px;
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+section h2 .num {
+  font-family: var(--mono);
+  font-size: 0.95rem;
+  color: var(--accent-warm);
+}
+section > p.intro { color: var(--muted); max-width: 640px; margin-bottom: 28px; }
+
+/* --- Ficha de registro (signature element) --- */
+.ficha {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  margin-bottom: 28px;
+  overflow: hidden;
+  box-shadow: 0 1px 0 rgba(22,36,31,0.03);
+}
+.ficha .tab {
+  background: var(--ink);
+  color: var(--bg);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  letter-spacing: 0.05em;
+  padding: 9px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.ficha .tab .pk-flag {
+  background: var(--accent-warm);
+  color: var(--ink);
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+}
+.ficha table { width: 100%; border-collapse: collapse; }
+.ficha th, .ficha td {
+  text-align: left;
+  padding: 9px 18px;
+  font-size: 0.88rem;
+  border-bottom: 1px solid var(--rule);
+}
+.ficha th {
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: var(--bg);
+}
+.ficha tr.pk td { background: #FBF4E9; font-weight: 600; }
+.ficha tr.fk td:first-child::after { content: " (FK)"; color: var(--accent); font-weight: 500; font-size: 0.78em; }
+.ficha .justificacion {
+  padding: 14px 18px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  border-top: 1px dashed var(--rule);
+  background: var(--bg);
+}
+.ficha .justificacion b { color: var(--ink); }
+
+.diagram-wrap {
+  background: var(--surface);
+  border: 1px solid var(--rule);
+  border-radius: 10px;
+  padding: 24px;
+  overflow-x: auto;
+}
+
+table.archivos { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+table.archivos th, table.archivos td { padding: 12px 18px; text-align: left; font-size: 0.9rem; border-bottom: 1px solid var(--rule); }
+table.archivos th { font-family: var(--mono); font-size: 0.72rem; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+table.archivos td:first-child { font-family: var(--mono); color: var(--accent); white-space: nowrap; }
+
+.codecard { background: #1B2521; border-radius: 10px; margin-bottom: 22px; overflow: hidden; }
+.codecard .filebar {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 18px; background: #131C19; color: #B9C9C2;
+  font-family: var(--mono); font-size: 0.82rem;
+}
+.codecard .filebar .role { color: #6FA89A; }
+.codecard pre { margin: 0; padding: 18px; overflow-x: auto; max-height: 480px; }
+.codecard code { font-family: var(--mono); font-size: 0.8rem; color: #E4ECE8; line-height: 1.55; }
+
+.joke-note {
+  border-left: 3px solid var(--accent-warm);
+  background: #FBF4E9;
+  padding: 12px 18px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  border-radius: 0 8px 8px 0;
+  margin-top: 18px;
+}
+.joke-note b { color: var(--ink); }
+
+table.muestra { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--rule); border-radius: 10px; overflow: hidden; }
+table.muestra th, table.muestra td { padding: 10px 16px; text-align: left; font-size: 0.85rem; border-bottom: 1px solid var(--rule); }
+table.muestra th { font-family: var(--mono); font-size: 0.7rem; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+
+footer { padding: 32px 64px; color: var(--muted); font-size: 0.8rem; border-top: 1px solid var(--rule); }
+
+@media (max-width: 860px) {
+  .layout { flex-direction: column; }
+  nav.toc { width: 100%; height: auto; position: relative; border-right: none; border-bottom: 1px solid var(--rule); }
+  main { padding: 32px 22px 80px; }
+  header.hero h1 { font-size: 2rem; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+
+<nav class="toc">
+  <div class="brand"><span class="paw">&#128062;</span> PetMatch</div>
+  <div class="tagline">Diseño inicial &middot; e-commerce de mascotas</div>
+  <ul>
+    <li><a href="#intro">Introducción</a></li>
+    <li><a href="#registros">1 &middot; Registros</a></li>
+    <li><a href="#diagrama">2 &middot; Diagrama E-R</a></li>
+    <li><a href="#muestra">3 &middot; Catálogo de ejemplo</a></li>
+    <li><a href="#arquitectura">4 &middot; Arquitectura modular</a></li>
+    <li><a href="#codigo">5 &middot; Código fuente</a></li>
+  </ul>
+  <ul>
+    <li><a class="sub" href="#code-datos-py">datos.py</a></li><li><a class="sub" href="#code-autenticacion-py">autenticacion.py</a></li><li><a class="sub" href="#code-cliente-py">cliente.py</a></li><li><a class="sub" href="#code-catalogo-py">catalogo.py</a></li><li><a class="sub" href="#code-pedido-py">pedido.py</a></li><li><a class="sub" href="#code-main-py">main.py</a></li>
+  </ul>
+</nav>
+
+<main>
+  <header class="hero" id="intro">
+    <div class="eyebrow">Trabajo práctico &middot; diseño de e-commerce</div>
+    <h1>PetMatch</h1>
+    <p class="lede">Tienda especializada en productos y servicios personalizados para mascotas.
+    Este documento reúne el diseño de los registros, la justificación de cada clave,
+    el diagrama de relaciones y el código Python completo de los 6 módulos del sistema.</p>
+  </header>
+
+  <section id="registros">
+    <h2><span class="num">01</span> Registros del sistema</h2>
+    <p class="intro">Cinco estructuras tipo registro modelan el negocio: un cliente tiene
+    mascotas, las mascotas reciben productos o servicios personalizados, y todo eso se
+    concreta en un pedido con su detalle.</p>
+    
+<div class="ficha">
+  <div class="tab"><span>REGISTRO &middot; CLIENTE</span><span class="pk-flag">PK: id_cliente</span></div>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo de dato</th></tr></thead>
+    <tbody><tr class="pk"><td>id_cliente</td><td>int</td></tr>
+<tr class=""><td>nombre</td><td>str</td></tr>
+<tr class=""><td>apellido</td><td>str</td></tr>
+<tr class=""><td>email</td><td>str</td></tr>
+<tr class=""><td>telefono</td><td>str</td></tr>
+<tr class=""><td>direccion</td><td>str</td></tr>
+<tr class=""><td>usuario</td><td>str</td></tr>
+<tr class=""><td>clave</td><td>str</td></tr>
+<tr class=""><td>fecha_registro</td><td>str (AAAA-MM-DD)</td></tr>
+</tbody>
+  </table>
+  <div class="justificacion"><b>Clave subrogada (autonumérica).</b> El email o el usuario podrían en teoría editarse, y un mismo nombre y apellido pueden repetirse entre clientes distintos. Un id estable es indispensable porque MASCOTA y PEDIDO lo referencian como clave foránea.</div>
+</div>
+<div class="ficha">
+  <div class="tab"><span>REGISTRO &middot; MASCOTA</span><span class="pk-flag">PK: id_mascota</span></div>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo de dato</th></tr></thead>
+    <tbody><tr class="pk"><td>id_mascota</td><td>int</td></tr>
+<tr class="fk"><td>id_cliente</td><td>int</td></tr>
+<tr class=""><td>nombre_mascota</td><td>str</td></tr>
+<tr class=""><td>especie</td><td>str</td></tr>
+<tr class=""><td>raza</td><td>str</td></tr>
+<tr class=""><td>edad</td><td>int</td></tr>
+<tr class=""><td>peso</td><td>float</td></tr>
+<tr class=""><td>notas_especiales</td><td>str</td></tr>
+</tbody>
+  </table>
+  <div class="justificacion"><b>Clave subrogada.</b> El nombre de una mascota no es único ni siquiera dentro de un mismo cliente (dos perros llamados "Toby" son perfectamente posibles), por lo que no puede actuar como identificador.</div>
+</div>
+<div class="ficha">
+  <div class="tab"><span>REGISTRO &middot; PRODUCTO</span><span class="pk-flag">PK: id_producto</span></div>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo de dato</th></tr></thead>
+    <tbody><tr class="pk"><td>id_producto</td><td>int</td></tr>
+<tr class=""><td>nombre_producto</td><td>str</td></tr>
+<tr class=""><td>descripcion</td><td>str</td></tr>
+<tr class=""><td>tipo</td><td>str ("Producto" / "Servicio")</td></tr>
+<tr class=""><td>categoria</td><td>str</td></tr>
+<tr class=""><td>especie_mascota</td><td>str</td></tr>
+<tr class=""><td>personalizable</td><td>bool</td></tr>
+<tr class=""><td>precio</td><td>float</td></tr>
+<tr class=""><td>stock</td><td>int o None</td></tr>
+<tr class=""><td>fecha_alta</td><td>str (AAAA-MM-DD)</td></tr>
+<tr class=""><td>estado</td><td>bool</td></tr>
+</tbody>
+  </table>
+  <div class="justificacion"><b>Clave subrogada.</b> El nombre comercial no garantiza unicidad (dos proveedores podrían llamar igual a un producto distinto), y atributos como precio, stock o estado cambian constantemente: una clave primaria nunca debería depender de un valor editable.</div>
+</div>
+<div class="ficha">
+  <div class="tab"><span>REGISTRO &middot; PEDIDO</span><span class="pk-flag">PK: id_pedido</span></div>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo de dato</th></tr></thead>
+    <tbody><tr class="pk"><td>id_pedido</td><td>int</td></tr>
+<tr class="fk"><td>id_cliente</td><td>int</td></tr>
+<tr class=""><td>fecha_pedido</td><td>str (AAAA-MM-DD)</td></tr>
+<tr class=""><td>estado</td><td>str</td></tr>
+<tr class=""><td>total</td><td>float</td></tr>
+<tr class=""><td>metodo_pago</td><td>str o None</td></tr>
+</tbody>
+  </table>
+  <div class="justificacion"><b>Clave subrogada.</b> Identifica la operación de compra en forma unívoca, independiente de la fecha o el estado, que sí cambian a lo largo del ciclo de vida del pedido.</div>
+</div>
+<div class="ficha">
+  <div class="tab"><span>REGISTRO &middot; DETALLE_PEDIDO</span><span class="pk-flag">PK: id_detalle</span></div>
+  <table>
+    <thead><tr><th>Campo</th><th>Tipo de dato</th></tr></thead>
+    <tbody><tr class="pk"><td>id_detalle</td><td>int</td></tr>
+<tr class="fk"><td>id_pedido</td><td>int</td></tr>
+<tr class="fk"><td>id_producto</td><td>int</td></tr>
+<tr class="fk"><td>id_mascota</td><td>int o None</td></tr>
+<tr class=""><td>cantidad</td><td>int</td></tr>
+<tr class=""><td>precio_unitario</td><td>float</td></tr>
+</tbody>
+  </table>
+  <div class="justificacion"><b>Clave subrogada, no compuesta.</b> La combinación (id_pedido + id_producto) parecía alcanzar para identificar la fila, pero deja de ser única en cuanto el mismo producto se compra dos veces en un pedido para mascotas distintas. Por eso se eligió un id propio en vez de una clave compuesta.</div>
+</div>
+  </section>
+
+  <section id="diagrama">
+    <h2><span class="num">02</span> Diagrama entidad-relación</h2>
+    <p class="intro">Las flechas representan las claves foráneas: cómo se conecta cada
+    registro con el resto a través de su clave primaria.</p>
+    <div class="diagram-wrap">
+      <pre class="mermaid">erDiagram
+  CLIENTE ||--o{ MASCOTA : tiene
+  CLIENTE ||--o{ PEDIDO : realiza
+  PEDIDO ||--|{ DETALLE_PEDIDO : contiene
+  PRODUCTO ||--o{ DETALLE_PEDIDO : incluido_en
+  MASCOTA ||--o{ DETALLE_PEDIDO : es_para
+  CLIENTE {
+    int id_cliente PK
+    string nombre
+    string email
+  }
+  MASCOTA {
+    int id_mascota PK
+    int id_cliente FK
+    string nombre_mascota
+    string especie
+  }
+  PRODUCTO {
+    int id_producto PK
+    string nombre_producto
+    string tipo
+    decimal precio
+  }
+  PEDIDO {
+    int id_pedido PK
+    int id_cliente FK
+    date fecha_pedido
+    string estado
+  }
+  DETALLE_PEDIDO {
+    int id_detalle PK
+    int id_pedido FK
+    int id_producto FK
+    int id_mascota FK
+    int cantidad
+  }</pre>
+    </div>
+  </section>
+
+  <section id="muestra">
+    <h2><span class="num">03</span> Catálogo de ejemplo</h2>
+    <p class="intro">Una muestra ilustrativa de productos/servicios personalizados (datos de
+    prueba, no precargados en <code>datos.py</code>, que arranca con las listas vacías).</p>
+    <table class="muestra">
+      <thead><tr><th>Producto / Servicio</th><th>Categoría</th><th>Especie</th><th>Personalizable</th></tr></thead>
+      <tbody><tr><td>Capa de superhéroe talla Chihuahua</td><td>Accesorio</td><td>Perro</td><td>Sí</td></tr>
+<tr><td>Bufanda filosófica para gato existencialista</td><td>Accesorio</td><td>Gato</td><td>Sí</td></tr>
+<tr><td>Spa day: baño + aromaterapia de lavanda</td><td>Servicio</td><td>Perro</td><td>Sí</td></tr>
+<tr><td>Snacks "sin culpa" sabor zanahoria x500g</td><td>Alimento</td><td>Roedor</td><td>No</td></tr>
+<tr><td>Consulta de astrología felina (extraoficial)</td><td>Servicio</td><td>Gato</td><td>No</td></tr></tbody>
+    </table>
+    <div class="joke-note">Nota de producción: por ahora <b>no se procesan pagos
+    interdimensionales</b>. <code>confirmar_pedido()</code> solo acepta los métodos listados
+    en <code>datos.METODOS_PAGO_VALIDOS</code>.</div>
+  </section>
+
+  <section id="arquitectura">
+    <h2><span class="num">04</span> Arquitectura modular</h2>
+    <p class="intro">Un archivo por responsabilidad, no por función individual.</p>
+    <table class="archivos">
+      <thead><tr><th>Archivo</th><th>Responsabilidad</th></tr></thead>
+      <tbody><tr><td>datos.py</td><td>Bases de datos simuladas (listas/diccionarios) y constantes del sistema</td></tr>
+<tr><td>autenticacion.py</td><td>Login, validación de credenciales y alta de clientes</td></tr>
+<tr><td>cliente.py</td><td>Gestión de mascotas y edición de perfil del cliente</td></tr>
+<tr><td>catalogo.py</td><td>Alta, búsqueda y control de stock de productos/servicios</td></tr>
+<tr><td>pedido.py</td><td>Carrito, cálculo de totales, confirmación y cancelación de pedidos</td></tr>
+<tr><td>main.py</td><td>Menú principal: orquesta todos los módulos anteriores</td></tr></tbody>
+    </table>
+  </section>
+
+  <section id="codigo">
+    <h2><span class="num">05</span> Código fuente completo</h2>
+    <p class="intro">Los 6 módulos, en el mismo orden en que fueron desarrollados y probados.</p>
+    
+<div class="codecard" id="code-datos-py">
+  <div class="filebar"><span>datos.py</span><span class="role">capa de datos</span></div>
+  <pre><code>&quot;&quot;&quot;
+datos.py
+--------
+Módulo de datos de PetMatch.
+
+Equivalencia con pseudocódigo:
+- Cada REGISTRO ... FIN REGISTRO se modela aquí como un diccionario Python
+  (un conjunto de campos de distinto tipo agrupados bajo un mismo nombre).
+- Cada &quot;tabla&quot; de registros (el AMBIENTE persistente del programa) se modela
+  como una lista de diccionarios.
+- Las funciones generar_id_* cumplen el rol de los contadores autonuméricos
+  que generan la clave primaria (PK) de cada nuevo registro.
+&quot;&quot;&quot;
+
+# ------------------------------------------------------------------
+# CONSTANTES DEL SISTEMA
+# ------------------------------------------------------------------
+
+ESPECIES_VALIDAS = [&quot;Perro&quot;, &quot;Gato&quot;, &quot;Ave&quot;, &quot;Roedor&quot;, &quot;Otro&quot;]
+
+CATEGORIAS_VALIDAS = [&quot;Alimento&quot;, &quot;Juguete&quot;, &quot;Accesorio&quot;, &quot;Salud&quot;, &quot;Estetica&quot;, &quot;Servicio&quot;]
+
+ESTADOS_PEDIDO = [&quot;Pendiente&quot;, &quot;Confirmado&quot;, &quot;Enviado&quot;, &quot;Entregado&quot;, &quot;Cancelado&quot;]
+
+STOCK_MINIMO = 0
+
+MAX_INTENTOS_LOGIN = 3
+
+METODOS_PAGO_VALIDOS = [&quot;Efectivo&quot;, &quot;Tarjeta de crédito&quot;, &quot;Tarjeta de débito&quot;, &quot;Transferencia&quot;, &quot;Mercado Pago&quot;]
+
+# Lista de razas sugeridas para mascotas tipo &quot;Perro&quot;, a modo de concepto
+# de personalización. No se valida estrictamente: el campo &quot;raza&quot; del
+# registro MASCOTA sigue aceptando cualquier texto.
+RAZAS_PERRO_SUGERIDAS = [&quot;Labrador&quot;, &quot;Bulldog Francés&quot;, &quot;Caniche&quot;, &quot;Pastor Alemán&quot;, &quot;Chihuahua&quot;, &quot;Otro&quot;]
+
+METODOS_PAGO_VALIDOS = [&quot;Efectivo&quot;, &quot;Tarjeta de crédito&quot;, &quot;Tarjeta de débito&quot;, &quot;Transferencia&quot;, &quot;Mercado Pago&quot;]
+
+# Lista sugerida, no obligatoria: idea de &quot;tienda personalizada&quot; para mostrar
+# opciones al dar de alta una mascota de especie &quot;Perro&quot;. No se valida contra
+# esta lista, queda como concepto a futuro.
+RAZAS_PERRO_SUGERIDAS = [&quot;Labrador&quot;, &quot;Caniche&quot;, &quot;Bulldog Francés&quot;, &quot;Golden Retriever&quot;, &quot;Chihuahua&quot;, &quot;Salchicha&quot;, &quot;Mestizo&quot;]
+
+
+# ------------------------------------------------------------------
+# CONTADORES PARA CLAVES PRIMARIAS AUTONUMÉRICAS
+# ------------------------------------------------------------------
+
+_contador_id_cliente = 0
+_contador_id_mascota = 0
+_contador_id_producto = 0
+_contador_id_pedido = 0
+_contador_id_detalle = 0
+
+
+def generar_id_cliente():
+    &quot;&quot;&quot;Genera y devuelve el siguiente id_cliente disponible (PK).&quot;&quot;&quot;
+    global _contador_id_cliente
+    _contador_id_cliente += 1
+    return _contador_id_cliente
+
+
+def generar_id_mascota():
+    &quot;&quot;&quot;Genera y devuelve el siguiente id_mascota disponible (PK).&quot;&quot;&quot;
+    global _contador_id_mascota
+    _contador_id_mascota += 1
+    return _contador_id_mascota
+
+
+def generar_id_producto():
+    &quot;&quot;&quot;Genera y devuelve el siguiente id_producto disponible (PK).&quot;&quot;&quot;
+    global _contador_id_producto
+    _contador_id_producto += 1
+    return _contador_id_producto
+
+
+def generar_id_pedido():
+    &quot;&quot;&quot;Genera y devuelve el siguiente id_pedido disponible (PK).&quot;&quot;&quot;
+    global _contador_id_pedido
+    _contador_id_pedido += 1
+    return _contador_id_pedido
+
+
+def generar_id_detalle():
+    &quot;&quot;&quot;Genera y devuelve el siguiente id_detalle disponible (PK).&quot;&quot;&quot;
+    global _contador_id_detalle
+    _contador_id_detalle += 1
+    return _contador_id_detalle
+
+
+# ------------------------------------------------------------------
+# &quot;BASES DE DATOS&quot; SIMULADAS (listas de registros tipo diccionario)
+# ------------------------------------------------------------------
+
+# Registro CLIENTE:
+#   id_cliente (PK, int) | nombre (str) | apellido (str) | email (str)
+#   telefono (str) | direccion (str) | usuario (str) | clave (str)
+#   fecha_registro (str, formato AAAA-MM-DD)
+clientes = []
+
+# Registro MASCOTA:
+#   id_mascota (PK, int) | id_cliente (FK, int) | nombre_mascota (str)
+#   especie (str) | raza (str) | edad (int) | peso (float)
+#   notas_especiales (str)
+mascotas = []
+
+# Registro PRODUCTO (incluye también servicios):
+#   id_producto (PK, int) | nombre_producto (str) | descripcion (str)
+#   tipo (str: &quot;Producto&quot; / &quot;Servicio&quot;) | categoria (str)
+#   especie_mascota (str) | personalizable (bool) | precio (float)
+#   stock (int o None si tipo == &quot;Servicio&quot;) | fecha_alta (str)
+#   estado (bool: True = activo)
+productos = []
+
+# Registro PEDIDO:
+#   id_pedido (PK, int) | id_cliente (FK, int) | fecha_pedido (str)
+#   estado (str) | total (float) | metodo_pago (str o None hasta confirmar)
+pedidos = []
+
+# Registro DETALLE_PEDIDO:
+#   id_detalle (PK, int) | id_pedido (FK, int) | id_producto (FK, int)
+#   id_mascota (FK, int) | cantidad (int) | precio_unitario (float)
+detalle_pedidos = []
+</code></pre>
+</div>
+<div class="codecard" id="code-autenticacion-py">
+  <div class="filebar"><span>autenticacion.py</span><span class="role">login y registro</span></div>
+  <pre><code>&quot;&quot;&quot;
+autenticacion.py
+-----------------
+Módulo de autenticación de PetMatch.
+
+Opera sobre el registro CLIENTE definido en datos.py: permite dar de
+alta nuevos clientes y validar el inicio de sesión (usuario y clave)
+contra los registros ya guardados.
+&quot;&quot;&quot;
+
+import datetime
+import datos
+
+
+def registrar_cliente(nombre, apellido, email, telefono, direccion, usuario, clave):
+    &quot;&quot;&quot;
+    Crea un nuevo registro CLIENTE y lo agrega a datos.clientes.
+    Devuelve el diccionario del cliente creado.
+    &quot;&quot;&quot;
+    nuevo_cliente = {
+        &quot;id_cliente&quot;: datos.generar_id_cliente(),
+        &quot;nombre&quot;: nombre,
+        &quot;apellido&quot;: apellido,
+        &quot;email&quot;: email,
+        &quot;telefono&quot;: telefono,
+        &quot;direccion&quot;: direccion,
+        &quot;usuario&quot;: usuario,
+        &quot;clave&quot;: clave,
+        &quot;fecha_registro&quot;: datetime.date.today().isoformat(),
+    }
+    datos.clientes.append(nuevo_cliente)
+    return nuevo_cliente
+
+
+def buscar_cliente_por_usuario(usuario):
+    &quot;&quot;&quot;Devuelve el registro CLIENTE cuyo campo &#x27;usuario&#x27; coincide, o None si no existe.&quot;&quot;&quot;
+    for cliente in datos.clientes:
+        if cliente[&quot;usuario&quot;] == usuario:
+            return cliente
+    return None
+
+
+def validar_credenciales(usuario, clave):
+    &quot;&quot;&quot;Devuelve el registro CLIENTE si usuario y clave coinciden, o None en caso contrario.&quot;&quot;&quot;
+    cliente = buscar_cliente_por_usuario(usuario)
+    if cliente is not None and cliente[&quot;clave&quot;] == clave:
+        return cliente
+    return None
+
+
+def iniciar_sesion():
+    &quot;&quot;&quot;
+    Solicita usuario y clave por consola, hasta datos.MAX_INTENTOS_LOGIN veces.
+    Devuelve el registro CLIENTE si el login es exitoso, o None si se
+    agotan los intentos.
+    &quot;&quot;&quot;
+    intentos = 0
+    while intentos &lt; datos.MAX_INTENTOS_LOGIN:
+        usuario = input(&quot;Usuario: &quot;)
+        clave = input(&quot;Clave: &quot;)
+        cliente = validar_credenciales(usuario, clave)
+
+        if cliente is not None:
+            print(f&quot;¡Bienvenido/a, {cliente[&#x27;nombre&#x27;]}!&quot;)
+            return cliente
+
+        intentos += 1
+        intentos_restantes = datos.MAX_INTENTOS_LOGIN - intentos
+        if intentos_restantes &gt; 0:
+            print(f&quot;Usuario o clave incorrectos. Intentos restantes: {intentos_restantes}&quot;)
+        else:
+            print(&quot;Se agotaron los intentos. Acceso denegado.&quot;)
+
+    return None
+</code></pre>
+</div>
+<div class="codecard" id="code-cliente-py">
+  <div class="filebar"><span>cliente.py</span><span class="role">mascotas y perfil</span></div>
+  <pre><code>&quot;&quot;&quot;
+cliente.py
+----------
+Módulo de gestión de clientes y mascotas en PetMatch.
+
+Opera sobre los registros CLIENTE y MASCOTA definidos en datos.py:
+permite dar de alta, modificar y eliminar mascotas, así como editar
+los datos de perfil de un cliente ya registrado. El alta de cliente
+y la validación de usuario/clave viven en autenticacion.py.
+&quot;&quot;&quot;
+
+import datos
+
+
+# ------------------------------------------------------------------
+# GESTIÓN DE MASCOTAS
+# ------------------------------------------------------------------
+
+def alta_mascota(id_cliente, nombre_mascota, especie, raza, edad, peso, notas_especiales=&quot;&quot;):
+    &quot;&quot;&quot;
+    Crea un nuevo registro MASCOTA vinculado a un cliente existente
+    (id_cliente como FK). Devuelve el diccionario de la mascota creada,
+    o None si la especie indicada no es válida.
+    &quot;&quot;&quot;
+    if especie not in datos.ESPECIES_VALIDAS:
+        print(f&quot;Especie inválida. Opciones: {&#x27;, &#x27;.join(datos.ESPECIES_VALIDAS)}&quot;)
+        return None
+
+    nueva_mascota = {
+        &quot;id_mascota&quot;: datos.generar_id_mascota(),
+        &quot;id_cliente&quot;: id_cliente,
+        &quot;nombre_mascota&quot;: nombre_mascota,
+        &quot;especie&quot;: especie,
+        &quot;raza&quot;: raza,
+        &quot;edad&quot;: edad,
+        &quot;peso&quot;: peso,
+        &quot;notas_especiales&quot;: notas_especiales,
+    }
+    datos.mascotas.append(nueva_mascota)
+    return nueva_mascota
+
+
+def listar_mascotas_cliente(id_cliente):
+    &quot;&quot;&quot;Devuelve la lista de registros MASCOTA cuyo id_cliente (FK) coincide.&quot;&quot;&quot;
+    return [m for m in datos.mascotas if m[&quot;id_cliente&quot;] == id_cliente]
+
+
+def buscar_mascota_por_id(id_mascota):
+    &quot;&quot;&quot;Devuelve el registro MASCOTA con ese id, o None si no existe.&quot;&quot;&quot;
+    for mascota in datos.mascotas:
+        if mascota[&quot;id_mascota&quot;] == id_mascota:
+            return mascota
+    return None
+
+
+def modificar_mascota(id_mascota, **campos_nuevos):
+    &quot;&quot;&quot;
+    Actualiza los campos indicados (ej: raza=&quot;Labrador&quot;, peso=12.5) del
+    registro MASCOTA con ese id. No permite modificar id_mascota ni
+    id_cliente (claves). Devuelve True si se actualizó, False si la
+    mascota no existe.
+    &quot;&quot;&quot;
+    mascota = buscar_mascota_por_id(id_mascota)
+    if mascota is None:
+        return False
+
+    for campo, valor in campos_nuevos.items():
+        if campo in mascota and campo not in (&quot;id_mascota&quot;, &quot;id_cliente&quot;):
+            mascota[campo] = valor
+    return True
+
+
+def eliminar_mascota(id_mascota):
+    &quot;&quot;&quot;Elimina el registro MASCOTA con ese id. Devuelve True si se eliminó.&quot;&quot;&quot;
+    mascota = buscar_mascota_por_id(id_mascota)
+    if mascota is None:
+        return False
+    datos.mascotas.remove(mascota)
+    return True
+
+
+# ------------------------------------------------------------------
+# GESTIÓN DE PERFIL DE CLIENTE
+# ------------------------------------------------------------------
+
+def modificar_datos_cliente(id_cliente, **campos_nuevos):
+    &quot;&quot;&quot;
+    Actualiza datos de perfil del cliente (nombre, apellido, email,
+    telefono, direccion). El usuario y la clave NO se modifican acá;
+    eso es responsabilidad de autenticacion.py.
+    Devuelve True si se actualizó, False si el cliente no existe.
+    &quot;&quot;&quot;
+    campos_permitidos = {&quot;nombre&quot;, &quot;apellido&quot;, &quot;email&quot;, &quot;telefono&quot;, &quot;direccion&quot;}
+
+    for cliente in datos.clientes:
+        if cliente[&quot;id_cliente&quot;] == id_cliente:
+            for campo, valor in campos_nuevos.items():
+                if campo in campos_permitidos:
+                    cliente[campo] = valor
+            return True
+    return False
+</code></pre>
+</div>
+<div class="codecard" id="code-catalogo-py">
+  <div class="filebar"><span>catalogo.py</span><span class="role">catálogo</span></div>
+  <pre><code>&quot;&quot;&quot;
+catalogo.py
+-----------
+Módulo de catálogo de PetMatch.
+
+Opera sobre el registro PRODUCTO definido en datos.py (que también
+representa servicios): alta, búsqueda, modificación y control de
+stock de los productos y servicios ofrecidos.
+&quot;&quot;&quot;
+
+import datetime
+import datos
+
+
+def alta_producto(nombre_producto, descripcion, tipo, categoria, especie_mascota, personalizable, precio, stock=None):
+    &quot;&quot;&quot;
+    Crea un nuevo registro PRODUCTO (o servicio) y lo agrega a
+    datos.productos. Devuelve el diccionario creado, o None si algún
+    dato no es válido.
+    &quot;&quot;&quot;
+    if tipo not in (&quot;Producto&quot;, &quot;Servicio&quot;):
+        print(&quot;Tipo inválido. Debe ser &#x27;Producto&#x27; o &#x27;Servicio&#x27;.&quot;)
+        return None
+
+    if categoria not in datos.CATEGORIAS_VALIDAS:
+        print(f&quot;Categoría inválida. Opciones: {&#x27;, &#x27;.join(datos.CATEGORIAS_VALIDAS)}&quot;)
+        return None
+
+    if especie_mascota not in datos.ESPECIES_VALIDAS and especie_mascota != &quot;Todas&quot;:
+        print(f&quot;Especie inválida. Opciones: {&#x27;, &#x27;.join(datos.ESPECIES_VALIDAS)} o &#x27;Todas&#x27;.&quot;)
+        return None
+
+    if tipo == &quot;Servicio&quot;:
+        stock = None  # los servicios no manejan stock
+
+    nuevo_producto = {
+        &quot;id_producto&quot;: datos.generar_id_producto(),
+        &quot;nombre_producto&quot;: nombre_producto,
+        &quot;descripcion&quot;: descripcion,
+        &quot;tipo&quot;: tipo,
+        &quot;categoria&quot;: categoria,
+        &quot;especie_mascota&quot;: especie_mascota,
+        &quot;personalizable&quot;: personalizable,
+        &quot;precio&quot;: precio,
+        &quot;stock&quot;: stock,
+        &quot;fecha_alta&quot;: datetime.date.today().isoformat(),
+        &quot;estado&quot;: True,
+    }
+    datos.productos.append(nuevo_producto)
+    return nuevo_producto
+
+
+def listar_productos(solo_activos=True):
+    &quot;&quot;&quot;Devuelve la lista de productos/servicios, filtrando por activos si corresponde.&quot;&quot;&quot;
+    if solo_activos:
+        return [p for p in datos.productos if p[&quot;estado&quot;]]
+    return list(datos.productos)
+
+
+def buscar_producto_por_id(id_producto):
+    &quot;&quot;&quot;Devuelve el registro PRODUCTO con ese id, o None si no existe.&quot;&quot;&quot;
+    for producto in datos.productos:
+        if producto[&quot;id_producto&quot;] == id_producto:
+            return producto
+    return None
+
+
+def buscar_por_categoria(categoria):
+    &quot;&quot;&quot;Devuelve los productos/servicios activos de una categoría dada.&quot;&quot;&quot;
+    return [p for p in listar_productos() if p[&quot;categoria&quot;] == categoria]
+
+
+def buscar_por_especie(especie):
+    &quot;&quot;&quot;Devuelve los productos/servicios activos para una especie (o los de &#x27;Todas&#x27;).&quot;&quot;&quot;
+    return [p for p in listar_productos() if p[&quot;especie_mascota&quot;] in (especie, &quot;Todas&quot;)]
+
+
+def modificar_producto(id_producto, **campos_nuevos):
+    &quot;&quot;&quot;
+    Actualiza los campos indicados del registro PRODUCTO con ese id.
+    No permite modificar id_producto (clave). Devuelve True si se
+    actualizó, False si el producto no existe.
+    &quot;&quot;&quot;
+    producto = buscar_producto_por_id(id_producto)
+    if producto is None:
+        return False
+
+    for campo, valor in campos_nuevos.items():
+        if campo in producto and campo != &quot;id_producto&quot;:
+            producto[campo] = valor
+    return True
+
+
+def dar_baja_producto(id_producto):
+    &quot;&quot;&quot;
+    Da de baja lógica un producto/servicio (estado=False) en vez de
+    eliminarlo, para no perder la referencia en pedidos ya realizados.
+    Devuelve True si se dio de baja, False si no existe.
+    &quot;&quot;&quot;
+    return modificar_producto(id_producto, estado=False)
+
+
+def actualizar_stock(id_producto, cantidad):
+    &quot;&quot;&quot;
+    Suma &#x27;cantidad&#x27; al stock del producto (usar un valor negativo para
+    descontar, por ejemplo al confirmar un pedido). No aplica a
+    servicios, cuyo stock es None. Devuelve True si se pudo actualizar.
+    &quot;&quot;&quot;
+    producto = buscar_producto_por_id(id_producto)
+    if producto is None or producto[&quot;stock&quot;] is None:
+        return False
+    producto[&quot;stock&quot;] += cantidad
+    return True
+</code></pre>
+</div>
+<div class="codecard" id="code-pedido-py">
+  <div class="filebar"><span>pedido.py</span><span class="role">carrito y pedidos</span></div>
+  <pre><code>&quot;&quot;&quot;
+pedido.py
+---------
+Módulo de pedidos de PetMatch.
+
+Opera sobre los registros PEDIDO y DETALLE_PEDIDO definidos en
+datos.py. Un pedido nace en estado &quot;Pendiente&quot; y funciona como
+carrito: se le pueden agregar o quitar items. Al confirmarlo se
+descuenta el stock real del catálogo.
+&quot;&quot;&quot;
+
+import datetime
+import datos
+import catalogo
+
+
+# ------------------------------------------------------------------
+# CREACIÓN Y CONSULTA DE PEDIDOS
+# ------------------------------------------------------------------
+
+def crear_pedido(id_cliente):
+    &quot;&quot;&quot;
+    Crea un nuevo registro PEDIDO en estado &#x27;Pendiente&#x27; (actúa como
+    carrito) y lo agrega a datos.pedidos. Devuelve el diccionario
+    creado.
+    &quot;&quot;&quot;
+    nuevo_pedido = {
+        &quot;id_pedido&quot;: datos.generar_id_pedido(),
+        &quot;id_cliente&quot;: id_cliente,
+        &quot;fecha_pedido&quot;: datetime.date.today().isoformat(),
+        &quot;estado&quot;: &quot;Pendiente&quot;,
+        &quot;total&quot;: 0.0,
+        &quot;metodo_pago&quot;: None,
+    }
+    datos.pedidos.append(nuevo_pedido)
+    return nuevo_pedido
+
+
+def buscar_pedido_por_id(id_pedido):
+    &quot;&quot;&quot;Devuelve el registro PEDIDO con ese id, o None si no existe.&quot;&quot;&quot;
+    for pedido in datos.pedidos:
+        if pedido[&quot;id_pedido&quot;] == id_pedido:
+            return pedido
+    return None
+
+
+def listar_pedidos_cliente(id_cliente):
+    &quot;&quot;&quot;Devuelve el historial de pedidos (todos los estados) de un cliente.&quot;&quot;&quot;
+    return [p for p in datos.pedidos if p[&quot;id_cliente&quot;] == id_cliente]
+
+
+# ------------------------------------------------------------------
+# ITEMS DEL PEDIDO (DETALLE_PEDIDO)
+# ------------------------------------------------------------------
+
+def agregar_item_pedido(id_pedido, id_producto, cantidad, id_mascota=None):
+    &quot;&quot;&quot;
+    Agrega un producto/servicio al pedido (debe estar &#x27;Pendiente&#x27;).
+    Valida existencia del producto y stock disponible. id_mascota es
+    opcional, por si el item no es para una mascota en particular.
+    Devuelve el registro DETALLE_PEDIDO creado, o None si algo falló.
+    &quot;&quot;&quot;
+    pedido = buscar_pedido_por_id(id_pedido)
+    if pedido is None or pedido[&quot;estado&quot;] != &quot;Pendiente&quot;:
+        print(&quot;El pedido no existe o ya no admite cambios.&quot;)
+        return None
+
+    producto = catalogo.buscar_producto_por_id(id_producto)
+    if producto is None or not producto[&quot;estado&quot;]:
+        print(&quot;El producto/servicio no existe o está inactivo.&quot;)
+        return None
+
+    if producto[&quot;stock&quot;] is not None and producto[&quot;stock&quot;] &lt; cantidad:
+        print(f&quot;Stock insuficiente. Disponible: {producto[&#x27;stock&#x27;]}.&quot;)
+        return None
+
+    nuevo_detalle = {
+        &quot;id_detalle&quot;: datos.generar_id_detalle(),
+        &quot;id_pedido&quot;: id_pedido,
+        &quot;id_producto&quot;: id_producto,
+        &quot;id_mascota&quot;: id_mascota,
+        &quot;cantidad&quot;: cantidad,
+        &quot;precio_unitario&quot;: producto[&quot;precio&quot;],
+    }
+    datos.detalle_pedidos.append(nuevo_detalle)
+    calcular_total(id_pedido)
+    return nuevo_detalle
+
+
+def quitar_item_pedido(id_detalle):
+    &quot;&quot;&quot;
+    Quita un ítem del pedido (solo si el pedido sigue &#x27;Pendiente&#x27;).
+    Devuelve True si se quitó, False en caso contrario.
+    &quot;&quot;&quot;
+    for detalle in datos.detalle_pedidos:
+        if detalle[&quot;id_detalle&quot;] == id_detalle:
+            pedido = buscar_pedido_por_id(detalle[&quot;id_pedido&quot;])
+            if pedido is None or pedido[&quot;estado&quot;] != &quot;Pendiente&quot;:
+                return False
+            datos.detalle_pedidos.remove(detalle)
+            calcular_total(detalle[&quot;id_pedido&quot;])
+            return True
+    return False
+
+
+def listar_items_pedido(id_pedido):
+    &quot;&quot;&quot;Devuelve la lista de registros DETALLE_PEDIDO de un pedido dado.&quot;&quot;&quot;
+    return [d for d in datos.detalle_pedidos if d[&quot;id_pedido&quot;] == id_pedido]
+
+
+# ------------------------------------------------------------------
+# TOTALES Y CONFIRMACIÓN
+# ------------------------------------------------------------------
+
+def calcular_total(id_pedido):
+    &quot;&quot;&quot;Recalcula y guarda el total del pedido en base a sus items.&quot;&quot;&quot;
+    pedido = buscar_pedido_por_id(id_pedido)
+    if pedido is None:
+        return 0.0
+
+    total = sum(d[&quot;cantidad&quot;] * d[&quot;precio_unitario&quot;] for d in listar_items_pedido(id_pedido))
+    pedido[&quot;total&quot;] = total
+    return total
+
+
+def confirmar_pedido(id_pedido, metodo_pago):
+    &quot;&quot;&quot;
+    Confirma el pedido: valida el método de pago, descuenta stock real
+    de cada producto y pasa el estado a &#x27;Confirmado&#x27;. Devuelve True si
+    se confirmó, False si el pedido no existe, ya fue procesado, no
+    tiene items o el método de pago no es válido.
+    &quot;&quot;&quot;
+    pedido = buscar_pedido_por_id(id_pedido)
+    if pedido is None or pedido[&quot;estado&quot;] != &quot;Pendiente&quot;:
+        return False
+
+    if metodo_pago not in datos.METODOS_PAGO_VALIDOS:
+        print(f&quot;Método de pago inválido. Opciones: {&#x27;, &#x27;.join(datos.METODOS_PAGO_VALIDOS)}&quot;)
+        return False
+
+    items = listar_items_pedido(id_pedido)
+    if not items:
+        print(&quot;El pedido no tiene items.&quot;)
+        return False
+
+    for item in items:
+        catalogo.actualizar_stock(item[&quot;id_producto&quot;], -item[&quot;cantidad&quot;])
+
+    pedido[&quot;metodo_pago&quot;] = metodo_pago
+    pedido[&quot;estado&quot;] = &quot;Confirmado&quot;
+    calcular_total(id_pedido)
+    return True
+
+
+def cancelar_pedido(id_pedido):
+    &quot;&quot;&quot;
+    Cancela un pedido. Si ya estaba &#x27;Confirmado&#x27;, restituye el stock
+    descontado. Devuelve True si se canceló, False si no corresponde
+    (por ejemplo, si ya fue entregado).
+    &quot;&quot;&quot;
+    pedido = buscar_pedido_por_id(id_pedido)
+    if pedido is None or pedido[&quot;estado&quot;] in (&quot;Entregado&quot;, &quot;Cancelado&quot;):
+        return False
+
+    if pedido[&quot;estado&quot;] == &quot;Confirmado&quot;:
+        for item in listar_items_pedido(id_pedido):
+            catalogo.actualizar_stock(item[&quot;id_producto&quot;], item[&quot;cantidad&quot;])
+
+    pedido[&quot;estado&quot;] = &quot;Cancelado&quot;
+    return True
+</code></pre>
+</div>
+<div class="codecard" id="code-main-py">
+  <div class="filebar"><span>main.py</span><span class="role">menú principal</span></div>
+  <pre><code>&quot;&quot;&quot;
+main.py
+-------
+Punto de entrada de PetMatch.
+
+Arma el menú principal de la aplicación, importando los módulos
+datos, autenticacion, cliente, catalogo y pedido, y orquestando el
+flujo completo: login/registro, gestión de mascotas, catálogo y
+carrito de pedidos.
+&quot;&quot;&quot;
+
+import datos
+import autenticacion
+import cliente
+import catalogo
+import pedido
+
+
+def pedir_numero(mensaje):
+    &quot;&quot;&quot;Pide un número (float) por consola hasta que sea válido.&quot;&quot;&quot;
+    while True:
+        texto = input(mensaje)
+        try:
+            return float(texto)
+        except ValueError:
+            print(&quot;Ingresá un número válido.&quot;)
+
+
+def pedir_entero(mensaje):
+    &quot;&quot;&quot;Pide un número entero por consola hasta que sea válido.&quot;&quot;&quot;
+    while True:
+        texto = input(mensaje)
+        try:
+            return int(texto)
+        except ValueError:
+            print(&quot;Ingresá un número entero válido.&quot;)
+
+
+# ------------------------------------------------------------------
+# MENÚ DE AUTENTICACIÓN
+# ------------------------------------------------------------------
+
+def menu_autenticacion():
+    &quot;&quot;&quot;
+    Muestra el menú de ingreso/registro hasta que el usuario inicia
+    sesión o decide salir. Devuelve el registro CLIENTE logueado, o
+    None si elige salir.
+    &quot;&quot;&quot;
+    while True:
+        print(&quot;\n--- PETMATCH ---&quot;)
+        print(&quot;1) Iniciar sesión&quot;)
+        print(&quot;2) Registrarme&quot;)
+        print(&quot;3) Salir&quot;)
+        opcion = input(&quot;Elegí una opción: &quot;)
+
+        if opcion == &quot;1&quot;:
+            cliente_actual = autenticacion.iniciar_sesion()
+            if cliente_actual is not None:
+                return cliente_actual
+        elif opcion == &quot;2&quot;:
+            nombre = input(&quot;Nombre: &quot;)
+            apellido = input(&quot;Apellido: &quot;)
+            email = input(&quot;Email: &quot;)
+            telefono = input(&quot;Teléfono: &quot;)
+            direccion = input(&quot;Dirección: &quot;)
+            usuario = input(&quot;Elegí un usuario: &quot;)
+            clave = input(&quot;Elegí una clave: &quot;)
+            nuevo = autenticacion.registrar_cliente(
+                nombre, apellido, email, telefono, direccion, usuario, clave
+            )
+            print(f&quot;¡Listo, {nuevo[&#x27;nombre&#x27;]}! Ya podés iniciar sesión.&quot;)
+        elif opcion == &quot;3&quot;:
+            return None
+        else:
+            print(&quot;Opción inválida.&quot;)
+
+
+# ------------------------------------------------------------------
+# MENÚ DE MASCOTAS
+# ------------------------------------------------------------------
+
+def menu_mascotas(cliente_actual):
+    while True:
+        print(&quot;\n--- MIS MASCOTAS ---&quot;)
+        print(&quot;1) Ver mis mascotas&quot;)
+        print(&quot;2) Agregar mascota&quot;)
+        print(&quot;3) Volver&quot;)
+        opcion = input(&quot;Elegí una opción: &quot;)
+
+        if opcion == &quot;1&quot;:
+            mascotas = cliente.listar_mascotas_cliente(cliente_actual[&quot;id_cliente&quot;])
+            if not mascotas:
+                print(&quot;Todavía no tenés mascotas registradas.&quot;)
+            for m in mascotas:
+                print(f&quot;#{m[&#x27;id_mascota&#x27;]} - {m[&#x27;nombre_mascota&#x27;]} ({m[&#x27;especie&#x27;]}, {m[&#x27;raza&#x27;]})&quot;)
+        elif opcion == &quot;2&quot;:
+            nombre_mascota = input(&quot;Nombre de la mascota: &quot;)
+            print(f&quot;Especies válidas: {&#x27;, &#x27;.join(datos.ESPECIES_VALIDAS)}&quot;)
+            especie = input(&quot;Especie: &quot;)
+            if especie.strip().lower() == &quot;perro&quot;:
+                print(f&quot;Algunas razas sugeridas: {&#x27;, &#x27;.join(datos.RAZAS_PERRO_SUGERIDAS)}&quot;)
+            raza = input(&quot;Raza: &quot;)
+            edad = pedir_entero(&quot;Edad: &quot;)
+            peso = pedir_numero(&quot;Peso (kg): &quot;)
+            notas = input(&quot;Notas especiales (opcional): &quot;)
+            cliente.alta_mascota(cliente_actual[&quot;id_cliente&quot;], nombre_mascota, especie, raza, edad, peso, notas)
+        elif opcion == &quot;3&quot;:
+            return
+        else:
+            print(&quot;Opción inválida.&quot;)
+
+
+# ------------------------------------------------------------------
+# MENÚ DE CATÁLOGO
+# ------------------------------------------------------------------
+
+def mostrar_producto(p):
+    extra = f&quot;Stock: {p[&#x27;stock&#x27;]}&quot; if p[&quot;stock&quot;] is not None else &quot;Servicio&quot;
+    print(f&quot;#{p[&#x27;id_producto&#x27;]} - {p[&#x27;nombre_producto&#x27;]} | ${p[&#x27;precio&#x27;]} | {p[&#x27;categoria&#x27;]} | {extra}&quot;)
+
+
+def menu_catalogo():
+    while True:
+        print(&quot;\n--- CATÁLOGO ---&quot;)
+        print(&quot;1) Ver todo el catálogo&quot;)
+        print(&quot;2) Buscar por categoría&quot;)
+        print(&quot;3) Buscar por especie&quot;)
+        print(&quot;4) Volver&quot;)
+        opcion = input(&quot;Elegí una opción: &quot;)
+
+        if opcion == &quot;1&quot;:
+            for p in catalogo.listar_productos():
+                mostrar_producto(p)
+        elif opcion == &quot;2&quot;:
+            print(f&quot;Categorías válidas: {&#x27;, &#x27;.join(datos.CATEGORIAS_VALIDAS)}&quot;)
+            categoria = input(&quot;Categoría: &quot;)
+            for p in catalogo.buscar_por_categoria(categoria):
+                mostrar_producto(p)
+        elif opcion == &quot;3&quot;:
+            print(f&quot;Especies válidas: {&#x27;, &#x27;.join(datos.ESPECIES_VALIDAS)}&quot;)
+            especie = input(&quot;Especie: &quot;)
+            for p in catalogo.buscar_por_especie(especie):
+                mostrar_producto(p)
+        elif opcion == &quot;4&quot;:
+            return
+        else:
+            print(&quot;Opción inválida.&quot;)
+
+
+# ------------------------------------------------------------------
+# MENÚ DE PEDIDOS (CARRITO)
+# ------------------------------------------------------------------
+
+def obtener_o_crear_pedido_activo(cliente_actual):
+    &quot;&quot;&quot;Devuelve el pedido &#x27;Pendiente&#x27; del cliente, o crea uno nuevo si no tiene.&quot;&quot;&quot;
+    for p in pedido.listar_pedidos_cliente(cliente_actual[&quot;id_cliente&quot;]):
+        if p[&quot;estado&quot;] == &quot;Pendiente&quot;:
+            return p
+    return pedido.crear_pedido(cliente_actual[&quot;id_cliente&quot;])
+
+
+def menu_pedido(cliente_actual):
+    pedido_activo = obtener_o_crear_pedido_activo(cliente_actual)
+
+    while True:
+        print(f&quot;\n--- CARRITO (Pedido #{pedido_activo[&#x27;id_pedido&#x27;]}) ---&quot;)
+        print(&quot;1) Ver items del carrito&quot;)
+        print(&quot;2) Agregar producto/servicio&quot;)
+        print(&quot;3) Confirmar pedido&quot;)
+        print(&quot;4) Cancelar pedido&quot;)
+        print(&quot;5) Ver historial de pedidos&quot;)
+        print(&quot;6) Volver&quot;)
+        opcion = input(&quot;Elegí una opción: &quot;)
+
+        if opcion == &quot;1&quot;:
+            items = pedido.listar_items_pedido(pedido_activo[&quot;id_pedido&quot;])
+            if not items:
+                print(&quot;El carrito está vacío.&quot;)
+            for item in items:
+                producto = catalogo.buscar_producto_por_id(item[&quot;id_producto&quot;])
+                nombre = producto[&quot;nombre_producto&quot;] if producto else &quot;Producto eliminado&quot;
+                subtotal = item[&quot;cantidad&quot;] * item[&quot;precio_unitario&quot;]
+                print(f&quot;#{item[&#x27;id_detalle&#x27;]} - {nombre} x{item[&#x27;cantidad&#x27;]} = ${subtotal}&quot;)
+            print(f&quot;Total: ${pedido.calcular_total(pedido_activo[&#x27;id_pedido&#x27;])}&quot;)
+        elif opcion == &quot;2&quot;:
+            for p in catalogo.listar_productos():
+                mostrar_producto(p)
+            id_producto = pedir_entero(&quot;ID del producto/servicio: &quot;)
+            cantidad = pedir_entero(&quot;Cantidad: &quot;)
+
+            id_mascota = None
+            mascotas = cliente.listar_mascotas_cliente(cliente_actual[&quot;id_cliente&quot;])
+            if mascotas:
+                for m in mascotas:
+                    print(f&quot;#{m[&#x27;id_mascota&#x27;]} - {m[&#x27;nombre_mascota&#x27;]}&quot;)
+                texto = input(&quot;¿Para qué mascota es? (Enter para omitir): &quot;)
+                if texto.strip():
+                    id_mascota = int(texto)
+
+            pedido.agregar_item_pedido(pedido_activo[&quot;id_pedido&quot;], id_producto, cantidad, id_mascota)
+        elif opcion == &quot;3&quot;:
+            print(f&quot;Métodos de pago válidos: {&#x27;, &#x27;.join(datos.METODOS_PAGO_VALIDOS)}&quot;)
+            metodo_pago = input(&quot;Método de pago: &quot;)
+            if pedido.confirmar_pedido(pedido_activo[&quot;id_pedido&quot;], metodo_pago):
+                print(f&quot;¡Pedido confirmado! Total: ${pedido_activo[&#x27;total&#x27;]} ({metodo_pago})&quot;)
+                pedido_activo = obtener_o_crear_pedido_activo(cliente_actual)
+            else:
+                print(&quot;No se pudo confirmar el pedido (revisá el método de pago o si está vacío).&quot;)
+        elif opcion == &quot;4&quot;:
+            if pedido.cancelar_pedido(pedido_activo[&quot;id_pedido&quot;]):
+                print(&quot;Pedido cancelado.&quot;)
+                pedido_activo = obtener_o_crear_pedido_activo(cliente_actual)
+            else:
+                print(&quot;No se pudo cancelar el pedido.&quot;)
+        elif opcion == &quot;5&quot;:
+            for p in pedido.listar_pedidos_cliente(cliente_actual[&quot;id_cliente&quot;]):
+                pago = p[&quot;metodo_pago&quot;] if p[&quot;metodo_pago&quot;] else &quot;—&quot;
+                print(f&quot;#{p[&#x27;id_pedido&#x27;]} - {p[&#x27;estado&#x27;]} - ${p[&#x27;total&#x27;]} - {p[&#x27;fecha_pedido&#x27;]} - Pago: {pago}&quot;)
+        elif opcion == &quot;6&quot;:
+            return
+        else:
+            print(&quot;Opción inválida.&quot;)
+
+
+# ------------------------------------------------------------------
+# MENÚ PRINCIPAL Y ARRANQUE
+# ------------------------------------------------------------------
+
+def menu_principal(cliente_actual):
+    while True:
+        print(f&quot;\n--- HOLA, {cliente_actual[&#x27;nombre&#x27;].upper()} ---&quot;)
+        print(&quot;1) Mis mascotas&quot;)
+        print(&quot;2) Catálogo&quot;)
+        print(&quot;3) Carrito y pedidos&quot;)
+        print(&quot;4) Cerrar sesión&quot;)
+        opcion = input(&quot;Elegí una opción: &quot;)
+
+        if opcion == &quot;1&quot;:
+            menu_mascotas(cliente_actual)
+        elif opcion == &quot;2&quot;:
+            menu_catalogo()
+        elif opcion == &quot;3&quot;:
+            menu_pedido(cliente_actual)
+        elif opcion == &quot;4&quot;:
+            return
+        else:
+            print(&quot;Opción inválida.&quot;)
+
+
+def main():
+    while True:
+        cliente_actual = menu_autenticacion()
+        if cliente_actual is None:
+            print(&quot;¡Hasta la próxima!&quot;)
+            break
+        menu_principal(cliente_actual)
+
+
+if __name__ == &quot;__main__&quot;:
+    main()
+</code></pre>
+</div>
+  </section>
+
+  <footer>
+    PetMatch &middot; Trabajo práctico de diseño de e-commerce &middot; generado a partir de
+    los módulos Python probados en consola.
+  </footer>
+</main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+<script>
+  mermaid.initialize({ startOnLoad: true, theme: "base", themeVariables: {
+    primaryColor: "#FFFFFF", primaryTextColor: "#16241F", primaryBorderColor: "#2F6F62",
+    lineColor: "#5B6B66", fontFamily: "Inter, sans-serif", fontSize: "13px"
+  } });
+</script>
+</body>
+</html>
